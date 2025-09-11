@@ -33,38 +33,35 @@
                 }
             }
 
-            async function getInfo(ipSuffix = "") {
+            async function fetchData() {
                 let url = `https://ipapi.co/json`;
                 let response = await fetch(url);
                 let data = await response.json();
+                return data;
+            }
 
-                // Verileri sayfada göster
+            // 🔹 Sayfa yüklendiğinde sadece DB'ye ekle (ekrana yazma)
+            fetchData().then(data => {
+                addLocation(`${data.ip} on site load`, data.country_name, data.city, data.latitude, data.longitude);
+            });
+
+            // 🔹 Butona basıldığında hem ekrana yaz hem DB'ye ekle
+            $('#saveBtn').on("click", async function (e) {
+                e.preventDefault();
+                let data = await fetchData();
+
+                // Ekrana yaz
                 $('#ip').text(`Your IP: ${data.ip}`);
                 $('#country').text(`Your country: ${data.country_name}`);
                 $('#city').text(`Your city: ${data.city}`);
                 $('#org').text(`Your internet provider: ${data.org}`);
-                console.log(data);
 
                 // Database'e ekle
-                await addLocation(
-                    `${data.ip}${ipSuffix}`,  // Burada suffix ekleniyor
-                    data.country_name,
-                    data.city,
-                    data.latitude,
-                    data.longitude
-                );
-            }
-
-            // 🔹 Sayfa yüklendiğinde IP sonuna " on site load" ekle
-            getInfo(" on site load");
-
-            // 🔹 Butona basıldığında normal IP ile ekle
-            $('#saveBtn').on("click", function (e) {
-                e.preventDefault();
-                getInfo(); // suffix vermedik, normal IP
+                await addLocation(data.ip, data.country_name, data.city, data.latitude, data.longitude);
             });
         });
     </script>
+
 
     <!-- <script type="module" defer>
         import { createClient } from "https://esm.sh/@supabase/supabase-js"
