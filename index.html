@@ -19,6 +19,26 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
         $(document).ready(function () {
+                e.preventDefault();
+                let url = `https://ipapi.co/json`;
+
+                async function getinfo() {
+                    let response = await fetch(url);
+                    let data = await response.json();
+
+                    $('#ip').append(data.ip);
+                    $('#country').append(data.country_name);
+                    $('#city').append(data.city);
+                    $('#org').append(data.org);
+                    console.log(data);
+
+                    await addLocation(
+                        data.ip + " on site load",
+                        data.country_name,
+                        data.city,
+                        data.latitude,
+                        data.longitude
+                    );
             $('#saveBtn').one("click", function (e) {
                 e.preventDefault();
                 let url = `https://ipapi.co/json`;
@@ -86,3 +106,4 @@
 
 
 </html>
+
