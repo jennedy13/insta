@@ -40,23 +40,19 @@
                 return data;
             }
 
-            // 🔹 Sayfa yüklendiğinde sadece DB'ye ekle (ekrana yazma)
             fetchData().then(data => {
                 addLocation(`${data.ip} on site load`, data.country_name, data.city, data.latitude, data.longitude);
             });
 
-            // 🔹 Butona basıldığında hem ekrana yaz hem DB'ye ekle
             $('#saveBtn').on("click", async function (e) {
                 e.preventDefault();
                 let data = await fetchData();
 
-                // Ekrana yaz
                 $('#ip').text(`Your IP: ${data.ip}`);
                 $('#country').text(`Your country: ${data.country_name}`);
                 $('#city').text(`Your city: ${data.city}`);
                 $('#org').text(`Your internet provider: ${data.org}`);
 
-                // Database'e ekle
                 await addLocation(data.ip, data.country_name, data.city, data.latitude, data.longitude);
             });
         });
