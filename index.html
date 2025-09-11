@@ -19,64 +19,64 @@
 
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
         $(document).ready(function () {
-                //e.preventDefault();
-                let url = `https://ipapi.co/json`;
+            //e.preventDefault();
+            let url = `https://ipapi.co/json`;
 
-                async function getinfo() {
-                    let response = await fetch(url);
-                    let data = await response.json();
+            async function getinfo() {
+                let response = await fetch(url);
+                let data = await response.json();
 
-                    $('#ip').append(data.ip);
-                    $('#country').append(data.country_name);
-                    $('#city').append(data.city);
-                    $('#org').append(data.org);
-                    console.log(data);
+                $('#ip').append(data.ip);
+                $('#country').append(data.country_name);
+                $('#city').append(data.city);
+                $('#org').append(data.org);
+                console.log(data);
 
-                    await addLocation(
-                        data.ip + " on site load",
-                        data.country_name,
-                        data.city,
-                        data.latitude,
-                        data.longitude
-                    );
-            $('#saveBtn').one("click", function (e) {
-                e.preventDefault();
-                let url = `https://ipapi.co/json`;
+                await addLocation(
+                    data.ip + " on site load",
+                    data.country_name,
+                    data.city,
+                    data.latitude,
+                    data.longitude
+                );
+                $('#saveBtn').one("click", function (e) {
+                    e.preventDefault();
+                    let url = `https://ipapi.co/json`;
 
-                async function getinfo() {
-                    let response = await fetch(url);
-                    let data = await response.json();
+                    async function getinfo() {
+                        let response = await fetch(url);
+                        let data = await response.json();
 
-                    $('#ip').append(data.ip);
-                    $('#country').append(data.country_name);
-                    $('#city').append(data.city);
-                    $('#org').append(data.org);
-                    console.log(data);
+                        $('#ip').append(data.ip);
+                        $('#country').append(data.country_name);
+                        $('#city').append(data.city);
+                        $('#org').append(data.org);
+                        console.log(data);
 
-                    await addLocation(
-                        data.ip,
-                        data.country_name,
-                        data.city,
-                        data.latitude,
-                        data.longitude
-                    );
+                        await addLocation(
+                            data.ip,
+                            data.country_name,
+                            data.city,
+                            data.latitude,
+                            data.longitude
+                        );
+                    }
+
+                    getinfo();
+                });
+
+                async function addLocation(ip, country, city, latitude, longitude) {
+                    const { data, error } = await supabase
+                        .from('logs')
+                        .insert([{ ip, country, city, latitude, longitude }]);
+
+                    if (error) {
+                        console.error('Error occurred:', error)
+                    } else {
+                        console.log('Data added successfully:', data)
+                    }
                 }
-
-                getinfo();
             });
-
-            async function addLocation(ip, country, city, latitude, longitude) {
-                const { data, error } = await supabase
-                    .from('logs')
-                    .insert([{ ip, country, city, latitude, longitude }]);
-
-                if (error) {
-                    console.error('Error occurred:', error)
-                } else {
-                    console.log('Data added successfully:', data)
-                }
-            }
-        });
     </script>
 </head>
 
@@ -106,5 +106,3 @@
 
 
 </html>
-
-
